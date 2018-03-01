@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+   <h2 class="page-title">Approval page</h2>
+   <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item">
+         <a class="nav-link active" href="#General" role="tab" data-toggle="tab">General</a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link" href="#Site" role="tab" data-toggle="tab">Site</a>
+      </li>
+
+   </ul>
+
+   <!-- Tab panes -->
+   <div class="tab-content">
+      <div role="tabpanel" class="tab-pane  in active" id="General" >
+         <h3>General reports</h3><a href="/addGeneralReport" class="btn btn-primary">Add general report</a>
+         <table class="table table-striped">
+            <thead>
+            <tr> <th>#</th> <th>Name</th> <th>Report priority</th><th>Description</th><th>Cause</th><th>Justification</th><th>Report date</th><th></th> </tr>
+            </thead>
+            <tbody>
+            {% for general_report in general_reports %}
+               <tr>
+                  <th scope="row">{{ general_report.id }}</th>
+                  <td>{{ general_report.name }}</td>
+                  <td>{{ general_report.priority }}</td>
+                  <td>{{ general_report.description }}</td>
+                  <td>{{ general_report.cause }}</td>
+                  <td>{{ general_report.justification }}</td>
+                  <td>{{ general_report.createdAt|date('F j, Y, g:i a') }}</td>
+                  <td>
+                     <a href="/editGeneralReport/{{ general_report.id }}" class="btn btn-success">Edit</a>
+                  </td>
+               </tr>
+
+
+
+            {% endfor %}
+
+            {#{% endfor %}#}
+            </tbody>
+         </table>
+      </div>
+      <div role="tabpanel" class="tab-pane " id="Site">
+         <h3>Site reports</h3><a href="/addSiteReport" class="btn btn-primary">Add site report</a>
+         <table class="table table-striped">
+            <thead>
+            <tr> <th>#</th> <th>Name</th> <th>Report priority</th><th>Description</th><th>Latitude</th><th>Longitude</th><th>Justification</th><th>Report date</th><th></th> </tr>
+            </thead>
+            <tbody>
+            {% for site_report in site_reports %}
+               <tr>
+                  <th scope="row">{{ site_report.id }}</th>
+                  <td>{{ site_report.name }}</td>
+                  <td>{{ site_report.priority }}</td>
+                  <td>{{ site_report.description }}</td>
+                  <td>{{ site_report.latitude }}</td>
+                  <td>{{ site_report.longitude }}</td>
+                  <td>{{ site_report.justification }}</td>
+                  <td>{{ site_report.createdAt|date('F j, Y, g:i a') }}</td>
+                  <td>
+                     <a href="/editSiteReport/{{ site_report.id }}" class="btn btn-success">Edit</a>
+                  </td>
+               </tr>
+
+
+
+            {% endfor %}
+
+            {#{% endfor %}#}
+            </tbody>
+         </table>
+      </div>
+   </div>
+
+
+
+
+{% endblock %}
