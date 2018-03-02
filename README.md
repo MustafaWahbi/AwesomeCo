@@ -6,7 +6,7 @@ This is very simple system of reporting  using symfony 2.8
 * MySQL 5 Or higher
 * [Check symfony 2.8 requirements](https://symfony.com/doc/2.8/reference/requirements.html)
 
-###Installation
+### Installation
 
 1- clone the project file.
 
@@ -14,7 +14,7 @@ This is very simple system of reporting  using symfony 2.8
 
 3- Then Import the attached database (dataBase.sql)
 
-##brief description of the approach 
+## brief description of the approach 
 
 - **(A)** is the current one **(B)** improvements or suggestions
 
@@ -22,7 +22,7 @@ This is very simple system of reporting  using symfony 2.8
 
 
  
- **Routes**
+ ### Routes
  
   
   
