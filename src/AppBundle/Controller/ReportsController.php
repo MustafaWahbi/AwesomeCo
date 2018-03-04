@@ -293,6 +293,19 @@ class ReportsController extends Controller
      */
     public function deleteAction($id)
     {
-        var_dump("just delete ".$id); die();
+        $report = $this->getDoctrine()->getRepository('AppBundle:Reports')->find($id);
+
+        if($report){ // order found
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($report);
+            $entityManager->flush();
+            $this->addFlash('notice','Report successfully deleted !');
+            return $this->redirectToRoute('report_list');
+        }
+        else {
+            $this->addFlash("Report not found",'401');
+
+            return $this->redirectToRoute('approve_page');
+        }
     }
 }
