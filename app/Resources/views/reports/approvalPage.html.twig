@@ -46,6 +46,7 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" href="/approveForm/{{ general_report.id }}/1">Approve</a>
                                     <a class="dropdown-item" href="/approveForm/{{ general_report.id }}/2">Reject</a>
+                                    <a class="dropdown-item btn btn-danger" href="/delete/{{ general_report.id }}" onclick="return confirm('Are you sure?')">Delete</a>
                                 </div>
                             </div>
                         </td>
@@ -88,6 +89,7 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" href="/approveForm/{{ site_report.id }}/1">Approve</a>
                                     <a class="dropdown-item" href="/approveForm/{{ site_report.id }}/2">Reject</a>
+                                    <a class="dropdown-item btn btn-danger" href="/delete/{{ site_report.id }}" onclick="return confirm('Are you sure?')">Delete</a>
                                 </div>
                             </div>
                         </td>

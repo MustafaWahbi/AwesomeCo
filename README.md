@@ -49,3 +49,16 @@ id|parent_id|name|description|type|justification|priority|cause|latitude|longitu
 
 **(B)** we can use **JQuery** and **AJAX** to speed up the hole project and reduce number of pages has been made to just two pages.
 
+
+
+### The process
+ 
+ #### - report cases
+**1** - new report ( approve = 0 )
+
+**2** - Manager actions 
+  
+    a- Approve  the report (current report approve = 1 & parent approve = 0) 
+    b- Rejct the report (current report approve = 2)
+    c- Delete the report 
+    
