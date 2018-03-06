@@ -507,7 +507,7 @@
     <parameter key="doctrine.orm.naming_strategy.underscore.class">Doctrine\ORM\Mapping\UnderscoreNamingStrategy</parameter>
     <parameter key="doctrine.orm.quote_strategy.default.class">Doctrine\ORM\Mapping\DefaultQuoteStrategy</parameter>
     <parameter key="doctrine.orm.quote_strategy.ansi.class">Doctrine\ORM\Mapping\AnsiQuoteStrategy</parameter>
-    <parameter key="doctrine.orm.entity_listener_resolver.class">Doctrine\ORM\Mapping\DefaultEntityListenerResolver</parameter>
+    <parameter key="doctrine.orm.entity_listener_resolver.class">Doctrine\Bundle\DoctrineBundle\Mapping\ContainerAwareEntityListenerResolver</parameter>
     <parameter key="doctrine.orm.second_level_cache.default_cache_factory.class">Doctrine\ORM\Cache\DefaultCacheFactory</parameter>
     <parameter key="doctrine.orm.second_level_cache.default_region.class">Doctrine\ORM\Cache\Region\DefaultRegion</parameter>
     <parameter key="doctrine.orm.second_level_cache.filelock_region.class">Doctrine\ORM\Cache\Region\FileLockRegion</parameter>
@@ -608,6 +608,26 @@
       <parameter>doctrine_cache.delete_command</parameter>
       <parameter>doctrine_cache.flush_command</parameter>
       <parameter>doctrine_cache.stats_command</parameter>
+      <parameter>doctrine.database_create_command</parameter>
+      <parameter>doctrine.database_drop_command</parameter>
+      <parameter>doctrine.generate_entities_command</parameter>
+      <parameter>doctrine.mapping_import_command</parameter>
+      <parameter>doctrine.cache_clear_metadata_command</parameter>
+      <parameter>doctrine.cache_clear_query_cache_command</parameter>
+      <parameter>doctrine.cache_clear_result_command</parameter>
+      <parameter>doctrine.cache_collection_region_command</parameter>
+      <parameter>doctrine.mapping_convert_command</parameter>
+      <parameter>doctrine.schema_create_command</parameter>
+      <parameter>doctrine.schema_drop_command</parameter>
+      <parameter>doctrine.ensure_production_settings_command</parameter>
+      <parameter>doctrine.clear_entity_region_command</parameter>
+      <parameter>doctrine.database_import_command</parameter>
+      <parameter>doctrine.mapping_info_command</parameter>
+      <parameter>doctrine.clear_query_region_command</parameter>
+      <parameter>doctrine.query_dql_command</parameter>
+      <parameter>doctrine.query_sql_command</parameter>
+      <parameter>doctrine.schema_update_command</parameter>
+      <parameter>doctrine.schema_validate_command</parameter>
       <parameter>sensio_distribution.security_checker.command</parameter>
     </parameter>
   </parameters>
@@ -1792,7 +1812,7 @@
       <argument type="collection">
         <argument type="service">
           <service class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-            <argument>5a9b8e470f4551.35721716</argument>
+            <argument>5a9ead237b9613.66049678</argument>
           </service>
         </argument>
       </argument>
@@ -1923,7 +1943,7 @@
         <argument type="service">
           <service class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
             <argument type="service" id="security.token_storage"/>
-            <argument>5a9b8e470f4551.35721716</argument>
+            <argument>5a9ead237b9613.66049678</argument>
             <argument type="service" id="monolog.logger.security" on-invalid="null"/>
             <argument type="service" id="security.authentication.manager"/>
           </service>
@@ -2191,8 +2211,6 @@
       <argument type="service" id="http_kernel"/>
       <argument>twig.controller.exception:showAction</argument>
     </service>
-    <service id="monolog.activation_strategy.not_found" class="Symfony\Bridge\Monolog\Handler\FingersCrossed\NotFoundActivationStrategy"/>
-    <service id="monolog.handler.fingers_crossed.error_level_activation_strategy" class="Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy"/>
     <service id="monolog.processor.psr_log_message" class="Monolog\Processor\PsrLogMessageProcessor" public="false"/>
     <service id="monolog.handler.main" class="Monolog\Handler\StreamHandler">
       <argument>D:\task\AwesomeCo\app\logs/dev.log</argument>
@@ -2250,6 +2268,18 @@
       <argument>default</argument>
       <argument>default</argument>
     </service>
+    <service id="doctrine.database_create_command" class="Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand">
+      <tag name="console.command" command="doctrine:database:create"/>
+    </service>
+    <service id="doctrine.database_drop_command" class="Doctrine\Bundle\DoctrineBundle\Command\DropDatabaseDoctrineCommand">
+      <tag name="console.command" command="doctrine:database:drop"/>
+    </service>
+    <service id="doctrine.generate_entities_command" class="Doctrine\Bundle\DoctrineBundle\Command\GenerateEntitiesDoctrineCommand">
+      <tag name="console.command" command="doctrine:generate:entities"/>
+    </service>
+    <service id="doctrine.mapping_import_command" class="Doctrine\Bundle\DoctrineBundle\Command\ImportMappingDoctrineCommand">
+      <tag name="console.command" command="doctrine:mapping:import"/>
+    </service>
     <service id="doctrine.dbal.logger.profiling.default" class="Doctrine\DBAL\Logging\DebugStack" public="false"/>
     <service id="doctrine.dbal.default_connection" class="Doctrine\DBAL\Connection">
       <argument type="collection">
@@ -2288,6 +2318,12 @@
       <argument type="service">
         <service class="Symfony\Bridge\Doctrine\ContainerAwareEventManager" public="false">
           <argument type="service" id="service_container"/>
+          <call method="addEventListener">
+            <argument type="collection">
+              <argument>loadClassMetadata</argument>
+            </argument>
+            <argument type="service" id="doctrine.orm.default_listeners.attach_entity_listeners"/>
+          </call>
         </service>
       </argument>
       <argument type="collection"/>
@@ -2309,6 +2345,54 @@
       <tag name="validator.initializer"/>
       <argument type="service" id="doctrine"/>
     </service>
+    <service id="doctrine.cache_clear_metadata_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\ClearMetadataCacheDoctrineCommand">
+      <tag name="console.command" command="doctrine:cache:clear-metadata"/>
+    </service>
+    <service id="doctrine.cache_clear_query_cache_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\ClearQueryCacheDoctrineCommand">
+      <tag name="console.command" command="doctrine:cache:clear-query"/>
+    </service>
+    <service id="doctrine.cache_clear_result_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\ClearResultCacheDoctrineCommand">
+      <tag name="console.command" command="doctrine:cache:clear-result"/>
+    </service>
+    <service id="doctrine.cache_collection_region_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\CollectionRegionDoctrineCommand">
+      <tag name="console.command" command="doctrine:cache:clear-collection-region"/>
+    </service>
+    <service id="doctrine.mapping_convert_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\ConvertMappingDoctrineCommand">
+      <tag name="console.command" command="doctrine:mapping:convert"/>
+    </service>
+    <service id="doctrine.schema_create_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\CreateSchemaDoctrineCommand">
+      <tag name="console.command" command="doctrine:schema:create"/>
+    </service>
+    <service id="doctrine.schema_drop_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\DropSchemaDoctrineCommand">
+      <tag name="console.command" command="doctrine:schema:drop"/>
+    </service>
+    <service id="doctrine.ensure_production_settings_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\EnsureProductionSettingsDoctrineCommand">
+      <tag name="console.command" command="doctrine:ensure-production-settings"/>
+    </service>
+    <service id="doctrine.clear_entity_region_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\EntityRegionCacheDoctrineCommand">
+      <tag name="console.command" command="doctrine:cache:clear-entity-region"/>
+    </service>
+    <service id="doctrine.database_import_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\ImportDoctrineCommand">
+      <tag name="console.command" command="doctrine:database:import"/>
+    </service>
+    <service id="doctrine.mapping_info_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\InfoDoctrineCommand">
+      <tag name="console.command" command="doctrine:mapping:info"/>
+    </service>
+    <service id="doctrine.clear_query_region_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\QueryRegionCacheDoctrineCommand">
+      <tag name="console.command" command="doctrine:cache:clear-query-region"/>
+    </service>
+    <service id="doctrine.query_dql_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\RunDqlDoctrineCommand">
+      <tag name="console.command" command="doctrine:query:dql"/>
+    </service>
+    <service id="doctrine.query_sql_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\RunSqlDoctrineCommand">
+      <tag name="console.command" command="doctrine:query:sql"/>
+    </service>
+    <service id="doctrine.schema_update_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\UpdateSchemaDoctrineCommand">
+      <tag name="console.command" command="doctrine:schema:update"/>
+    </service>
+    <service id="doctrine.schema_validate_command" class="Doctrine\Bundle\DoctrineBundle\Command\Proxy\ValidateSchemaCommand">
+      <tag name="console.command" command="doctrine:schema:validate"/>
+    </service>
     <service id="doctrine_cache.providers.doctrine.orm.default_metadata_cache" class="Doctrine\Common\Cache\ArrayCache">
       <call method="setNamespace">
         <argument>sf_orm_default_f7ea83daae9e67b49aeca72306b9f3f29e14ea78b7de58c04137d26b0b82d27f</argument>
@@ -2324,7 +2408,12 @@
         <argument>sf_orm_default_f7ea83daae9e67b49aeca72306b9f3f29e14ea78b7de58c04137d26b0b82d27f</argument>
       </call>
     </service>
-    <service id="doctrine.orm.default_entity_listener_resolver" class="Doctrine\ORM\Mapping\DefaultEntityListenerResolver"/>
+    <service id="doctrine.orm.default_entity_listener_resolver" class="Doctrine\Bundle\DoctrineBundle\Mapping\ContainerAwareEntityListenerResolver">
+      <argument type="service" id="service_container"/>
+    </service>
+    <service id="doctrine.orm.default_listeners.attach_entity_listeners" class="Doctrine\ORM\Tools\AttachEntityListenersListener">
+      <tag name="doctrine.event_listener" event="loadClassMetadata"/>
+    </service>
     <service id="doctrine.orm.default_manager_configurator" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator">
       <argument type="collection"/>
       <argument type="collection"/>
@@ -2391,6 +2480,13 @@
           </call>
           <call method="setEntityListenerResolver">
             <argument type="service" id="doctrine.orm.default_entity_listener_resolver"/>
+          </call>
+          <call method="setRepositoryFactory">
+            <argument type="service">
+              <service class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory" public="false">
+                <argument>null</argument>
+              </service>
+            </argument>
           </call>
         </service>
       </argument>
@@ -2877,6 +2973,26 @@
     <service id="console.command.doctrine_bundle_doctrinecachebundle_command_deletecommand" alias="doctrine_cache.delete_command"/>
     <service id="console.command.doctrine_bundle_doctrinecachebundle_command_flushcommand" alias="doctrine_cache.flush_command"/>
     <service id="console.command.doctrine_bundle_doctrinecachebundle_command_statscommand" alias="doctrine_cache.stats_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_createdatabasedoctrinecommand" alias="doctrine.database_create_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_dropdatabasedoctrinecommand" alias="doctrine.database_drop_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_generateentitiesdoctrinecommand" alias="doctrine.generate_entities_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_importmappingdoctrinecommand" alias="doctrine.mapping_import_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_clearmetadatacachedoctrinecommand" alias="doctrine.cache_clear_metadata_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_clearquerycachedoctrinecommand" alias="doctrine.cache_clear_query_cache_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_clearresultcachedoctrinecommand" alias="doctrine.cache_clear_result_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_collectionregiondoctrinecommand" alias="doctrine.cache_collection_region_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_convertmappingdoctrinecommand" alias="doctrine.mapping_convert_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_createschemadoctrinecommand" alias="doctrine.schema_create_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_dropschemadoctrinecommand" alias="doctrine.schema_drop_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_ensureproductionsettingsdoctrinecommand" alias="doctrine.ensure_production_settings_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_entityregioncachedoctrinecommand" alias="doctrine.clear_entity_region_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_importdoctrinecommand" alias="doctrine.database_import_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_infodoctrinecommand" alias="doctrine.mapping_info_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_queryregioncachedoctrinecommand" alias="doctrine.clear_query_region_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_rundqldoctrinecommand" alias="doctrine.query_dql_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_runsqldoctrinecommand" alias="doctrine.query_sql_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_updateschemadoctrinecommand" alias="doctrine.schema_update_command"/>
+    <service id="console.command.doctrine_bundle_doctrinebundle_command_proxy_validateschemacommand" alias="doctrine.schema_validate_command"/>
     <service id="console.command.sensiolabs_security_command_securitycheckercommand" alias="sensio_distribution.security_checker.command"/>
   </services>
 </container>

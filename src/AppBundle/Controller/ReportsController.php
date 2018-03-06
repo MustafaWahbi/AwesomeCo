@@ -63,6 +63,11 @@ class ReportsController extends Controller
             $report = $this->getDoctrine()->getRepository('AppBundle:Reports')->find($id);
             $report->setJustification($form['Justification']->getData());
             $report->setApproved($action);
+            if($report->getParentId() && $action == 1){
+
+                $main_report = $this->getDoctrine()->getRepository('AppBundle:Reports')->find($report->getParentId());
+                $main_report->setApproved(3);
+            }
 
 
             $em->flush();

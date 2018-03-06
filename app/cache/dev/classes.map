@@ -50,13 +50,4 @@
   49 => 'Twig_LoaderInterface',
   50 => 'Twig_Markup',
   51 => 'Twig_Template',
-  52 => 'Doctrine\\Common\\Annotations\\DocLexer',
-  53 => 'Doctrine\\Common\\Annotations\\FileCacheReader',
-  54 => 'Doctrine\\Common\\Annotations\\PhpParser',
-  55 => 'Doctrine\\Common\\Annotations\\Reader',
-  56 => 'Doctrine\\Common\\Lexer',
-  57 => 'Doctrine\\Common\\Persistence\\ConnectionRegistry',
-  58 => 'Doctrine\\Common\\Persistence\\Proxy',
-  59 => 'Doctrine\\Common\\Util\\ClassUtils',
-  60 => 'Doctrine\\Bundle\\DoctrineBundle\\Registry',
 );
